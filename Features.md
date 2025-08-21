@@ -1,0 +1,9 @@
+Features:
+
+Pricing Guidelines: Detailed bullet lists from your Excel, covering all services (Screenprinting, Embroidery, Embossing, DTF, Sublimation, etc.), with notes on artwork fees, customer warnings, and quantity-based pricing.
+Screenprint Calculator: Split into Freckles Supplied and Customer Supplied columns. Inputs include # of shirts, dozen cost (Freckles only), colors per location (up to 6, but MVP shows 2 for simplicity), art/film charges, additional charges, royalty %. Outputs: Ink costs, screens, total charges, per-shirt price. Uses ink price table (e.g., $1 for 1 color, $1.35 for 2).
+Embroidery Calculator: Inputs for garment cost, stitches per location (up to 3), puff yes/no, customer supplied yes/no. Outputs: Price per location and total, using base rates ($7/$10 Freckles, $12.50/$15.50 customer) + $1 per add'l 1k stitches.
+Stickers/Decals: Inputs for height/width (max 52"), quantity, price/foot ($20 default), lamination yes/no (adds ~50% estimate), cutting yes/no (+$0.10 each). Outputs: Horizontal max per row, material length (ft), price per sticker. Notes on weeding extras.
+Store Pricing: Inputs for regular Freckles price, up to 5 royalties (%), additional markup (%), dollars back. Outputs: Total royalty, roy + reg price, store price, revenue after royalties.
+Magnet: Similar to stickers but max 22" width. Inputs: Height/width, quantity, price/foot ($20 default). Outputs: Horizontal max, material length, price per magnet.
+Sign Project Calculator: Tabular inputs for vinyl materials (e.g., 40c $3/ft cost, $12/sq ft px, qty ft), lamination (e.g., 8508 $2.07/ft), masking, and labor (rates/hours for production $75/hr, install $95/hr, etc.). Outputs: Totals for vinyl/lam/masking ($), labor ($), overall project price.

@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Professional Print Shop Design System */
+
+@layer base {
+  :root {
+    /* Core Brand Colors */
+    --background: 250 250% 100%;
+    --foreground: 215 25% 12%;
+
+    /* Card & Surface Colors */
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 12%;
+
+    /* Primary - Professional Blue */
+    --primary: 215 85% 45%;
+    --primary-foreground: 0 0% 98%;
+    --primary-hover: 215 85% 40%;
+
+    /* Secondary - Clean Gray */
+    --secondary: 210 15% 96%;
+    --secondary-foreground: 215 25% 12%;
+
+    /* Muted Colors */
+    --muted: 210 15% 96%;
+    --muted-foreground: 215 10% 45%;
+
+    /* Accent - Success Green */
+    --accent: 142 70% 45%;
+    --accent-foreground: 0 0% 98%;
+
+    /* Warning & Error */
+    --warning: 35 100% 55%;
+    --warning-foreground: 0 0% 98%;
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Borders & Inputs */
+    --border: 215 15% 88%;
+    --input: 215 15% 88%;
+    --ring: 215 85% 45%;
+
+    /* Professional Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(215 85% 45%), hsl(215 85% 55%));
+    --gradient-secondary: linear-gradient(135deg, hsl(210 15% 96%), hsl(220 15% 92%));
+    --gradient-hero: linear-gradient(135deg, hsl(215 85% 45%), hsl(195 85% 50%));
+
+    /* Shadows */
+    --shadow-soft: 0 2px 8px -2px hsl(215 25% 12% / 0.1);
+    --shadow-medium: 0 4px 16px -4px hsl(215 25% 12% / 0.15);
+    --shadow-strong: 0 8px 32px -8px hsl(215 25% 12% / 0.2);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark Theme for Professional Use */
+    --background: 215 25% 8%;
+    --foreground: 0 0% 95%;
+
+    --card: 215 25% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 215 25% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 215 85% 55%;
+    --primary-foreground: 215 25% 8%;
+    --primary-hover: 215 85% 50%;
+
+    --secondary: 215 15% 15%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 215 15% 15%;
+    --muted-foreground: 215 10% 65%;
+
+    --accent: 142 70% 50%;
+    --accent-foreground: 215 25% 8%;
+
+    --warning: 35 100% 60%;
+    --warning-foreground: 215 25% 8%;
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 95%;
+
+    --border: 215 15% 20%;
+    --input: 215 15% 20%;
+    --ring: 215 85% 55%;
+
+    /* Dark Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(215 85% 55%), hsl(215 85% 65%));
+    --gradient-secondary: linear-gradient(135deg, hsl(215 15% 15%), hsl(220 15% 18%));
+    --gradient-hero: linear-gradient(135deg, hsl(215 85% 55%), hsl(195 85% 60%));
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
