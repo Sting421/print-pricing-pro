@@ -1,4 +1,4 @@
-import { Calculator, Palette, DollarSign, Sticker, Magnet, FileText } from "lucide-react";
+import { Calculator, Palette, DollarSign, Sticker, Magnet, FileText, Square } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -8,6 +8,7 @@ const navigationItems = [
   { href: "/embroidery", label: "Embroidery", icon: Calculator },
   { href: "/stickers", label: "Stickers & Decals", icon: Sticker },
   { href: "/magnets", label: "Magnets", icon: Magnet },
+  { href: "/signs", label: "Signs", icon: Square },
   { href: "/store-pricing", label: "Store Pricing", icon: DollarSign },
 ];
 
