@@ -10,7 +10,9 @@ import EmbroideryCalculator from "./pages/EmbroideryCalculator";
 import StickersCalculator from "./pages/StickersCalculator";
 import MagnetsCalculator from "./pages/MagnetsCalculator";
 import SignCalculator from "./pages/SignCalculator";
+import StorePricing from "./pages/StorePricing";
 import NotFound from "./pages/NotFound";
+import PatchesCalculator from "./pages/PatchesCalculator";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,8 @@ const App = () => (
             <Route path="/stickers" element={<StickersCalculator />} />
             <Route path="/magnets" element={<MagnetsCalculator />} />
             <Route path="/signs" element={<SignCalculator />} />
+            <Route path="/store-pricing" element={<StorePricing />} />
+            <Route path="/patches" element={<PatchesCalculator />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

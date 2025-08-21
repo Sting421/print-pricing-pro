@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Calculator, Palette, DollarSign, Sticker, Magnet, FileText, ArrowRight } from "lucide-react";
+import { Calculator, Palette, DollarSign, Sticker, Magnet, FileText, ArrowRight, BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -24,6 +24,13 @@ const calculatorServices = [
     icon: Sticker,
     href: "/stickers",
     features: ["52\" max width", "Lamination options", "Cutting services", "Material optimization"]
+  },
+  {
+    title: "Patches Calculator",
+    description: "UV-printed patches with heat application, markup, and artwork fees",
+    icon: BadgeCheck,
+    href: "/patches",
+    features: ["Leather/Faux/Sublimated", "+$3 heat option", "Artwork fees", "Per-item pricing"]
   },
   {
     title: "Store Pricing",

@@ -20,52 +20,56 @@ export default function StickersCalculator() {
   const calculateStickers = () => {
     const { height, width, quantity, pricePerFoot, lamination, cutting, weedingCharge } = formData;
 
-    // Basic validation and guard against invalid denominator (width must be < 26 inches)
-    if (height <= 0 || width <= 0 || quantity <= 0 || width >= 26) {
+    // Basic validation and guard against invalid inputs
+    if (height <= 0 || width <= 0 || quantity <= 0 || width > 46) {
       return {
         horizontalMax: 0,
         materialLength: "0.00",
-        baseMaterialCost: "0.00",
-        laminationCost: "0.00",
+        materialCost: "0.00",
+        setupFee: "0.00",
+        totalCostWithoutLamination: "0.00",
+        pricePerStickerWithoutLamination: "0.00",
+        pricePerStickerWithLamination: "0.00",
         cuttingCost: "0.00",
         weedingCost: "0.00",
-        setupFee: "0.00",
-        totalCost: "0.00",
-        pricePerSticker: "0.00"
+        finalTotalCost: "0.00",
+        finalPricePerSticker: "0.00"
       };
     }
 
-    // Constants per formula
+    // Constants per new formula
+    const usableWidth = 46; // inches
     const setupFee = 100; // fixed dollars
-    const halfRoll = 52 / 2; // 26 inches
-    const denominator = halfRoll - width; // inches
 
-    // Material length in feet using formula
-    const materialLength = (height * quantity) / 12 + (width / denominator);
+    // New formula calculations
+    const horizontalMax = usableWidth / width;
+    const materialLength = (quantity * height / 12) * ( width / usableWidth) + 2 ;
+    const materialCost = pricePerFoot * materialLength;
+    const totalCostWithoutLamination = setupFee + materialCost;
+    const pricePerStickerWithoutLamination = totalCostWithoutLamination / quantity;
+    const pricePerStickerWithLamination = pricePerStickerWithoutLamination * 1.75;
 
-    // Costs per formula
-    const baseMaterialCost = pricePerFoot * materialLength; // excludes setup fee
-    const laminationAddPerFoot = (52 - height) + (height + width) / denominator; // $/ft
-    const laminationCost = lamination ? laminationAddPerFoot * materialLength : 0;
+    // Additional costs
     const cuttingCost = cutting ? quantity * 0.1 : 0; // $0.10 per sticker
     const weedingCost = Math.max(0, Number.isFinite(weedingCharge) ? weedingCharge : 0);
 
-    const totalCost = setupFee + baseMaterialCost + laminationCost + cuttingCost + weedingCost;
-    const pricePerSticker = totalCost / quantity;
-
-    // Optional layout info (how many per row across 52")
-    const horizontalMax = Math.floor(52 / width);
+    // Final totals (base price + extras)
+    const basePricePerSticker = lamination ? pricePerStickerWithLamination : pricePerStickerWithoutLamination;
+    const finalPricePerSticker = basePricePerSticker + (cuttingCost / quantity) + (weedingCost / quantity);
+    const finalTotalCost = finalPricePerSticker * quantity;
 
     return {
-      horizontalMax,
-      materialLength: materialLength.toFixed(2),
-      baseMaterialCost: baseMaterialCost.toFixed(2),
-      laminationCost: laminationCost.toFixed(2),
+      horizontalMax: horizontalMax.toFixed(3),
+      materialLength: materialLength.toFixed(3),
+      materialCost: materialCost.toFixed(3),
+      setupFee: setupFee.toFixed(2),
+      totalCostWithoutLamination: totalCostWithoutLamination.toFixed(3),
+      pricePerStickerWithoutLamination: pricePerStickerWithoutLamination.toFixed(3),
+      pricePerStickerWithLamination: pricePerStickerWithLamination.toFixed(3),
       cuttingCost: cuttingCost.toFixed(2),
       weedingCost: weedingCost.toFixed(2),
-      setupFee: setupFee.toFixed(2),
-      totalCost: totalCost.toFixed(2),
-      pricePerSticker: pricePerSticker.toFixed(2)
+      finalTotalCost: finalTotalCost.toFixed(2),
+      finalPricePerSticker: finalPricePerSticker.toFixed(2)
     };
   };
 
@@ -106,7 +110,7 @@ export default function StickersCalculator() {
                     value={formData.width}
                     onChange={(e) => setFormData(prev => ({ ...prev, width: Number(e.target.value) }))}
                   />
-                  <p className="text-xs text-muted-foreground mt-1">Max width: 52" (formula requires width &lt; 26")</p>
+                  <p className="text-xs text-muted-foreground mt-1">Max width: 46" (usable roll width)</p>
                 </div>
               </div>
 
@@ -139,7 +143,7 @@ export default function StickersCalculator() {
                     checked={formData.lamination}
                     onCheckedChange={(checked) => setFormData(prev => ({ ...prev, lamination: checked }))}
                   />
-                  <Label htmlFor="lamination">Lamination (formula-based)</Label>
+                  <Label htmlFor="lamination">Lamination (1.75x multiplier)</Label>
                 </div>
 
                 <div className="flex items-center space-x-2">
@@ -184,23 +188,35 @@ export default function StickersCalculator() {
                 </div>
 
                 <div className="border-t pt-3 space-y-2">
-                  <h4 className="font-medium text-foreground">Cost Breakdown</h4>
+                  <h4 className="font-medium text-foreground">Base Pricing</h4>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Base Material:</span>
-                    <span className="font-medium">${results.baseMaterialCost}</span>
+                    <span className="text-muted-foreground">Material Cost:</span>
+                    <span className="font-medium">${results.materialCost}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Setup Fee:</span>
                     <span className="font-medium">${results.setupFee}</span>
                   </div>
-                  
-                  {formData.lamination && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Lamination:</span>
-                      <span className="font-medium">${results.laminationCost}</span>
-                    </div>
-                  )}
-                  
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Total (No Lamination):</span>
+                    <span className="font-medium">${results.totalCostWithoutLamination}</span>
+                  </div>
+                </div>
+
+                <div className="border-t pt-3 space-y-2">
+                  <h4 className="font-medium text-foreground">Price Per Sticker</h4>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Without Lamination:</span>
+                    <span className="font-medium">${results.pricePerStickerWithoutLamination}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">With Lamination (1.75x):</span>
+                    <span className="font-medium">${results.pricePerStickerWithLamination}</span>
+                  </div>
+                </div>
+
+                <div className="border-t pt-3 space-y-2">
+                  <h4 className="font-medium text-foreground">Additional Services</h4>
                   {formData.cutting && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Cutting:</span>
@@ -213,14 +229,16 @@ export default function StickersCalculator() {
                       <span className="font-medium">${results.weedingCost}</span>
                     </div>
                   )}
+                </div>
                   
-                  <div className="flex justify-between text-lg font-semibold pt-2 border-t">
-                    <span>Total Cost:</span>
-                    <span className="text-accent">${results.totalCost}</span>
+                <div className="border-t pt-3">
+                  <div className="flex justify-between text-lg font-semibold">
+                    <span>Final Total Cost:</span>
+                    <span className="text-accent">${results.finalTotalCost}</span>
                   </div>
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>Price per Sticker:</span>
-                    <span>${results.pricePerSticker}</span>
+                  <div className="flex justify-between text-sm text-muted-foreground mt-1">
+                    <span>Final Price per Sticker:</span>
+                    <span>${results.finalPricePerSticker}</span>
                   </div>
                 </div>
               </div>
@@ -237,9 +255,9 @@ export default function StickersCalculator() {
               <div>
                 <h4 className="font-medium mb-2">Material Specifications</h4>
                 <ul className="space-y-1 text-muted-foreground">
-                  <li>Maximum material width: 52 inches</li>
+                  <li>Usable material width: 46 inches</li>
                   <li>Default pricing: $20 per linear foot</li>
-                  <li>Lamination cost is computed via formula</li>
+                  <li>Lamination multiplies base price by 1.75x</li>
                 </ul>
               </div>
               <div>
