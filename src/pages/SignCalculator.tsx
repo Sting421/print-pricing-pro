@@ -388,8 +388,8 @@ export default function SignCalculator() {
                     const feet = toNum(row.feet);
                     const sub = sell * feet;
                     return (
-                      <div key={idx} className="grid grid-cols-12 gap-2 items-end">
-                        <div className="col-span-3">
+                      <div key={idx} className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-3 items-end">
+                        <div className="sm:col-span-3 lg:col-span-3">
                           <Label>Preset</Label>
                           <select
                             className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
@@ -413,7 +413,7 @@ export default function SignCalculator() {
                             ))}
                           </select>
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Type</Label>
                           <Input value={row.type} onChange={(e) => {
                             const v = [...vinylRows];
@@ -421,7 +421,7 @@ export default function SignCalculator() {
                             setVinylRows(v);
                           }} />
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Cost/ft ($)</Label>
                           <Input type="number" step="0.01" value={row.costPerFoot} onChange={(e) => {
                             const v = [...vinylRows];
@@ -429,11 +429,11 @@ export default function SignCalculator() {
                             setVinylRows(v);
                           }} />
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Selling/ft ($)</Label>
                           <Input value={sell.toString()} readOnly />
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Feet</Label>
                           <Input type="number" step="0.01" value={row.feet} onChange={(e) => {
                             const v = [...vinylRows];
@@ -441,7 +441,7 @@ export default function SignCalculator() {
                             setVinylRows(v);
                           }} />
                         </div>
-                        <div className="col-span-1 text-right">
+                        <div className="sm:col-span-6 lg:col-span-1 sm:text-left lg:text-right">
                           <div className="text-xs text-muted-foreground">Subtotal</div>
                           <div className="font-medium">${sub.toFixed(2)}</div>
                         </div>
@@ -478,8 +478,8 @@ export default function SignCalculator() {
                     const feet = toNum(row.feet);
                     const sub = sell * feet;
                     return (
-                      <div key={idx} className="grid grid-cols-12 gap-2 items-end">
-                        <div className="col-span-3">
+                      <div key={idx} className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-3 items-end">
+                        <div className="sm:col-span-3 lg:col-span-3">
                           <Label>Preset</Label>
                           <select
                             className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
@@ -503,7 +503,7 @@ export default function SignCalculator() {
                             ))}
                           </select>
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Type</Label>
                           <Input value={row.type} onChange={(e) => {
                             const v = [...laminateRows];
@@ -511,7 +511,7 @@ export default function SignCalculator() {
                             setLaminateRows(v);
                           }} />
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Cost/ft ($)</Label>
                           <Input type="number" step="0.01" value={row.costPerFoot} onChange={(e) => {
                             const v = [...laminateRows];
@@ -519,11 +519,11 @@ export default function SignCalculator() {
                             setLaminateRows(v);
                           }} />
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Selling/ft ($)</Label>
                           <Input value={sell.toString()} readOnly />
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Feet</Label>
                           <Input type="number" step="0.01" value={row.feet} onChange={(e) => {
                             const v = [...laminateRows];
@@ -531,7 +531,7 @@ export default function SignCalculator() {
                             setLaminateRows(v);
                           }} />
                         </div>
-                        <div className="col-span-1 text-right">
+                        <div className="sm:col-span-6 lg:col-span-1 sm:text-left lg:text-right">
                           <div className="text-xs text-muted-foreground">Subtotal</div>
                           <div className="font-medium">${sub.toFixed(2)}</div>
                         </div>
@@ -559,20 +559,20 @@ export default function SignCalculator() {
                 <CardDescription>Fixed sell price per foot</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-12 gap-2 items-end">
-                  <div className="col-span-3">
+                <div className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-3 items-end">
+                  <div className="sm:col-span-3 lg:col-span-3">
                     <Label>Cost/ft ($)</Label>
                     <Input value={"0.63"} readOnly />
                   </div>
-                  <div className="col-span-3">
+                  <div className="sm:col-span-3 lg:col-span-3">
                     <Label>Selling/ft ($)</Label>
                     <Input value={maskingPricePerFoot.toString()} readOnly />
                   </div>
-                  <div className="col-span-3">
+                  <div className="sm:col-span-3 lg:col-span-3">
                     <Label>Feet</Label>
                     <Input type="number" step="0.01" value={maskingFeet} onChange={(e) => setMaskingFeet(e.target.value)} />
                   </div>
-                  <div className="col-span-3 text-right">
+                  <div className="sm:col-span-3 lg:col-span-3 sm:text-left lg:text-right">
                     <div className="text-xs text-muted-foreground">Subtotal</div>
                     <div className="font-medium">${maskingSubtotal.toFixed(2)}</div>
                   </div>
@@ -597,8 +597,8 @@ export default function SignCalculator() {
                     const selectedPresetKey = row.presetKey ?? "";
                     const sub = toNum(row.rate) * toNum(row.hours);
                     return (
-                      <div key={idx} className="grid grid-cols-12 gap-2 items-end">
-                        <div className="col-span-3">
+                      <div key={idx} className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-3 items-end">
+                        <div className="sm:col-span-3 lg:col-span-3">
                           <Label>Preset</Label>
                           <select
                             className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
@@ -622,7 +622,7 @@ export default function SignCalculator() {
                             ))}
                           </select>
                         </div>
-                        <div className="col-span-3">
+                        <div className="sm:col-span-3 lg:col-span-3">
                           <Label>Type</Label>
                           <Input value={row.type} onChange={(e) => {
                             const v = [...laborRows];
@@ -630,7 +630,7 @@ export default function SignCalculator() {
                             setLaborRows(v);
                           }} />
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Rate ($/hr)</Label>
                           <Input type="number" step="0.01" value={row.rate} onChange={(e) => {
                             const v = [...laborRows];
@@ -638,7 +638,7 @@ export default function SignCalculator() {
                             setLaborRows(v);
                           }} />
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Hours</Label>
                           <Input type="number" step="0.01" value={row.hours} onChange={(e) => {
                             const v = [...laborRows];
@@ -646,7 +646,7 @@ export default function SignCalculator() {
                             setLaborRows(v);
                           }} />
                         </div>
-                        <div className="col-span-2 text-right">
+                        <div className="sm:col-span-6 lg:col-span-2 sm:text-left lg:text-right">
                           <div className="text-xs text-muted-foreground">Subtotal</div>
                           <div className="font-medium">${sub.toFixed(2)}</div>
                         </div>
@@ -674,8 +674,8 @@ export default function SignCalculator() {
                 <CardDescription>Preset-based pricing per foot</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-12 gap-2 items-end">
-                  <div className="col-span-6">
+                <div className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-3 items-end">
+                  <div className="sm:col-span-6 lg:col-span-6">
                     <Label>Type</Label>
                     <select
                       className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
@@ -687,18 +687,18 @@ export default function SignCalculator() {
                       ))}
                     </select>
                   </div>
-                  <div className="col-span-2">
+                  <div className="sm:col-span-3 lg:col-span-2">
                     <Label>Width (in)</Label>
                     <Input type="number" step="0.01" value={banner.widthIn} onChange={(e) => setBanner(b => ({ ...b, widthIn: e.target.value }))} />
                     {!bannerWidthOk && (
                       <div className="text-xs text-destructive mt-1">Exceeds max width of {preset.maxWidthIn}\"</div>
                     )}
                   </div>
-                  <div className="col-span-2">
+                  <div className="sm:col-span-3 lg:col-span-2">
                     <Label>Length (ft)</Label>
                     <Input type="number" step="0.01" value={banner.lengthFeet} onChange={(e) => setBanner(b => ({ ...b, lengthFeet: e.target.value }))} />
                   </div>
-                  <div className="col-span-12 text-right">
+                  <div className="sm:col-span-6 lg:col-span-12 sm:text-left lg:text-right">
                     <div className="text-xs text-muted-foreground">Subtotal</div>
                     <div className="font-medium">${bannerSubtotal.toFixed(2)}</div>
                   </div>
@@ -717,8 +717,8 @@ export default function SignCalculator() {
                 <CardDescription>Per-sign pricing × quantity</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-12 gap-2 items-end">
-                  <div className="col-span-3">
+                <div className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-3 items-end">
+                  <div className="sm:col-span-3 lg:col-span-3">
                     <Label>Sided</Label>
                     <select
                       className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
@@ -729,16 +729,16 @@ export default function SignCalculator() {
                       <option value="double">Double Sided</option>
                     </select>
                   </div>
-                  <div className="col-span-3">
+                  <div className="sm:col-span-3 lg:col-span-3">
                     <Label>Quantity</Label>
                     <Input type="number" step="1" value={yard.quantity} onChange={(e) => setYard(y => ({ ...y, quantity: e.target.value }))} />
                   </div>
-                  <div className="col-span-3">
+                  <div className="sm:col-span-3 lg:col-span-3">
                     <Label>Price/Sign ($)</Label>
                     <Input type="number" step="0.01" value={yard.pricePerSign || (yardSuggested?.toString() ?? "")} onChange={(e) => setYard(y => ({ ...y, pricePerSign: e.target.value }))} />
                     <div className="text-xs text-muted-foreground mt-1">Suggested: ${yardSuggested.toFixed(2)}</div>
                   </div>
-                  <div className="col-span-3 text-right">
+                  <div className="sm:col-span-3 lg:col-span-3 sm:text-left lg:text-right">
                     <div className="text-xs text-muted-foreground">Subtotal</div>
                     <div className="font-medium">${yardSubtotal.toFixed(2)}</div>
                   </div>
@@ -766,8 +766,8 @@ export default function SignCalculator() {
                     const sqft = toNum(row.sqFt);
                     const sub = sell * sqft;
                     return (
-                      <div key={idx} className="grid grid-cols-12 gap-2 items-end">
-                        <div className="col-span-3">
+                      <div key={idx} className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-3 items-end">
+                        <div className="sm:col-span-3 lg:col-span-3">
                           <Label>Preset</Label>
                           <select
                             className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
@@ -791,7 +791,7 @@ export default function SignCalculator() {
                             ))}
                           </select>
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Type</Label>
                           <Input value={row.type} onChange={(e) => {
                             const v = [...rigidRows];
@@ -799,7 +799,7 @@ export default function SignCalculator() {
                             setRigidRows(v);
                           }} />
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Cost/sq ft ($)</Label>
                           <Input type="number" step="0.01" value={row.costPerSqFt} onChange={(e) => {
                             const v = [...rigidRows];
@@ -807,11 +807,11 @@ export default function SignCalculator() {
                             setRigidRows(v);
                           }} />
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Selling/sq ft ($)</Label>
                           <Input value={sell.toString()} readOnly />
                         </div>
-                        <div className="col-span-2">
+                        <div className="sm:col-span-3 lg:col-span-2">
                           <Label>Sq Ft</Label>
                           <Input type="number" step="0.01" value={row.sqFt} onChange={(e) => {
                             const v = [...rigidRows];
@@ -819,7 +819,7 @@ export default function SignCalculator() {
                             setRigidRows(v);
                           }} />
                         </div>
-                        <div className="col-span-1 text-right">
+                        <div className="sm:col-span-6 lg:col-span-1 sm:text-left lg:text-right">
                           <div className="text-xs text-muted-foreground">Subtotal</div>
                           <div className="font-medium">${sub.toFixed(2)}</div>
                         </div>
