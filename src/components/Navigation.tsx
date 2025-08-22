@@ -1,4 +1,4 @@
-import { Calculator, Palette, DollarSign, Sticker, Magnet, FileText, Square, BadgeCheck } from "lucide-react";
+import { Calculator, Palette, DollarSign, Sticker, Magnet, FileText, Square, BadgeCheck, Package } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,7 @@ const navigationItems = [
   { href: "/magnets", label: "Magnets", icon: Magnet },
   { href: "/signs", label: "Signs", icon: Square },
   { href: "/patches", label: "Patches", icon: BadgeCheck },
+  { href: "/stock", label: "Stock", icon: Package },
   { href: "/store-pricing", label: "Store Pricing", icon: DollarSign },
 ];
 
@@ -18,18 +19,18 @@ export const Navigation = () => {
 
   return (
     <nav className="bg-card border-b border-border shadow-soft">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-center h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
-                <Calculator className="w-5 h-5 text-primary-foreground" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <img src="/BC Logo.png" alt="BC Logo" className="w-8 h-8 object-contain" />
               </div>
               <span className="text-xl font-bold text-foreground">BC Apparel</span>
             </Link>
           </div>
           
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex items-center space-x-1 ml-6">
             {navigationItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.href;
