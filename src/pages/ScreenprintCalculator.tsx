@@ -20,6 +20,7 @@ export default function ScreenprintCalculator() {
 
   const [customerSupplied, setCustomerSupplied] = useState({
     shirts: 0,
+    dozenCost: 0,
     location1Colors: 1,
     location2Colors: 0,
     artFilmCharges: 0,
@@ -40,6 +41,7 @@ export default function ScreenprintCalculator() {
 
   const [customerUI, setCustomerUI] = useState({
     shirts: String(0),
+    dozenCost: String(0),
     location1Colors: String(1),
     location2Colors: String(0),
     artFilmCharges: String(0),
@@ -70,6 +72,10 @@ export default function ScreenprintCalculator() {
     }
   } as const;
 
+  // Screen charge per color
+  const SCREEN_CHARGE_BC = 30;
+  const SCREEN_CHARGE_CUSTOMER = 35;
+
   const calculateFrecklesSupplied = () => {
     const { shirts, dozenCost, location1Colors, location2Colors, artFilmCharges, additionalCharges, royaltyPercent } = frecklesSupplied;
     
@@ -86,7 +92,7 @@ export default function ScreenprintCalculator() {
     const totalInkCosts = shirts * inkPerShirt;
 
     const totalColors = loc1 + loc2;
-    const screenCharges = totalColors * 30;
+    const screenCharges = totalColors * SCREEN_CHARGE_BC;
 
     const shirtCostPerShirt = dozenCost > 0 ? (dozenCost * 1.67) : 0;
 
@@ -117,7 +123,7 @@ export default function ScreenprintCalculator() {
   };
 
   const calculateCustomerSupplied = () => {
-    const { shirts, location1Colors, location2Colors, artFilmCharges, additionalCharges, royaltyPercent } = customerSupplied;
+    const { shirts, dozenCost, location1Colors, location2Colors, artFilmCharges, additionalCharges, royaltyPercent } = customerSupplied;
     
     const loc1 = Math.max(0, Math.min(8, Number(location1Colors || 0)));
     const loc2 = Math.max(0, Math.min(8, Number(location2Colors || 0)));
@@ -132,7 +138,7 @@ export default function ScreenprintCalculator() {
     const totalInkCosts = shirts * inkPerShirt;
 
     const totalColors = loc1 + loc2;
-    const screenCharges = totalColors * 30;
+    const screenCharges = totalColors * SCREEN_CHARGE_CUSTOMER;
 
     const totalCharges = totalInkCosts + screenCharges + artFilmCharges + additionalCharges;
 
@@ -141,7 +147,8 @@ export default function ScreenprintCalculator() {
     const royaltyAmount = totalCharges * (royaltyPercent / 100);
     const royaltyPerShirt = shirts > 0 ? royaltyAmount / shirts : 0;
 
-    const pricePerShirt = artProdPerShirt + royaltyPerShirt;
+    const shirtCostPerShirt = dozenCost > 0 ? (dozenCost * 1.67) : 0;
+    const pricePerShirt = shirtCostPerShirt + artProdPerShirt + royaltyPerShirt;
     const total = shirts * pricePerShirt;
 
     return {
@@ -152,6 +159,7 @@ export default function ScreenprintCalculator() {
       additionalCharges: additionalCharges.toFixed(2),
       totalCharges: totalCharges.toFixed(2),
       artProdPerShirt: artProdPerShirt.toFixed(2),
+      shirtCostPerShirt: shirtCostPerShirt.toFixed(2),
       royaltyPerShirt: royaltyPerShirt.toFixed(2),
       royaltyAmount: royaltyAmount.toFixed(2),
       total: total.toFixed(2),
@@ -433,6 +441,27 @@ export default function ScreenprintCalculator() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
+                      <Label htmlFor="customer-dozen">Dozen Cost ($)</Label>
+                      <Input
+                        id="customer-dozen"
+                        type="number"
+                        step="0.01"
+                        value={customerUI.dozenCost}
+                        onFocus={(e) => e.currentTarget.select()}
+                        onChange={(e) => setCustomerUI(prev => ({ ...prev, dozenCost: e.target.value }))}
+                        onBlur={(e) => {
+                          const v = e.target.value.trim();
+                          const n = v === '' ? NaN : Number(v);
+                          const next = Number.isFinite(n) ? Math.max(0, n) : 0;
+                          setCustomerSupplied(prev => ({ ...prev, dozenCost: next }));
+                          setCustomerUI(prev => ({ ...prev, dozenCost: String(next) }));
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
                       <Label htmlFor="customer-loc2">Location 2 Colors (0-8)</Label>
                       <Input
                         id="customer-loc2"
@@ -546,6 +575,10 @@ export default function ScreenprintCalculator() {
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Art & Prod. per Shirt:</span>
                       <span className="font-medium">${customerResults.artProdPerShirt}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Shirt Cost per Shirt:</span>
+                      <span className="font-medium">${customerResults.shirtCostPerShirt}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Royalty per Shirt:</span>
