@@ -97,7 +97,7 @@ export async function findProducts(
   sort: string = "relevance"
 ): Promise<SanMarSearchResponse> {
   // Use our proxy server instead of direct API call
-  const url = "http://localhost:3001/api/search";
+  const url = "/api/search";
   const body = {
     query,
     page,

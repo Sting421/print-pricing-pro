@@ -222,7 +222,7 @@ export async function fetchInventory(slug: string): Promise<InventoryResponse> {
     console.log(`Fetching inventory from provided SOAP endpoint for style ${styleNumber}`);
     
     // Use the provided absolute endpoint
-    const response = await fetch(`http://localhost:8080/api/sanmar-soap-inventory/${styleNumber}`);
+    const response = await fetch(`/api/sanmar-soap-inventory/${styleNumber}`);
     
     if (!response.ok) {
       const errorText = await response.text();
