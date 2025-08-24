@@ -15,6 +15,8 @@ export interface InventoryResponse {
   rows: InventoryItem[];
   error?: boolean;
   message?: string;
+  sizes?: string[]; // Size values for cross-table format
+  colors?: Array<[string, string]>; // [size, color] pairs for cross-table format
 }
 
 /**

@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { Magnet } from "lucide-react";
+import { Magnet, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { CalculatorCard } from "@/components/CalculatorCard";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function MagnetsCalculator() {
+  const navigate = useNavigate();
+  const [inventoryId, setInventoryId] = useState<string>("64000"); // Default style number
   const [form, setForm] = useState({
     heightIn: "3.5",
     widthIn: "3",
@@ -157,6 +161,29 @@ export default function MagnetsCalculator() {
                 <div className="flex justify-between text-lg font-semibold border-t pt-2">
                   <span>Price per Magnet:</span>
                   <span className="text-accent">${r.pricePerMagnet.toFixed(2)}</span>
+                </div>
+                
+                {/* Check Inventory Section */}
+                <div className="mt-4 pt-4 border-t">
+                  <div className="flex items-center gap-2">
+                    <Input
+                      placeholder="Style number (e.g. 64000)"
+                      value={inventoryId}
+                      onChange={(e) => setInventoryId(e.target.value)}
+                      className="flex-grow"
+                    />
+                    <Button 
+                      variant="outline"
+                      onClick={() => navigate(`/inventory-checker?style=${inventoryId}`)}
+                      className="whitespace-nowrap"
+                    >
+                      <Search className="h-4 w-4 mr-2" /> 
+                      Check Inventory
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Check raw inventory data for a specific style number
+                  </p>
                 </div>
               </div>
             </CardContent>

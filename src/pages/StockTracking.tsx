@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, Loader2, ExternalLink, ChevronLeft, ChevronRight, Package, FileSearch } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,11 +9,20 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { searchSanMarProducts, SanMarProduct } from "@/lib/sanmar-api";
 import { fetchInventory, fetchSanMarInventory } from "@/lib/inventory-api";
-import { InventoryDisplay } from "@/components/InventoryDisplay";
+import { RawInventoryDisplay } from "@/components/RawInventoryDisplay";
 import { InventoryResponse } from "@/types/inventory";
 
 export default function StockTracking() {
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  // Helper: strip HTML tags and decode entities
+  const toPlainText = (input: string | undefined | null): string => {
+    if (!input) return "";
+    const div = document.createElement('div');
+    div.innerHTML = input;
+    return (div.textContent || div.innerText || "").trim();
+  };
 
   // SanMar search state
   const [sanmarQuery, setSanmarQuery] = useState("");
@@ -99,7 +109,7 @@ export default function StockTracking() {
   };
 
   const checkInventory = async (product: SanMarProduct) => {
-    if (!product.slug) {
+    if (!product.styleNumber) {
       toast({
         title: "Cannot check inventory",
         description: "This product doesn't have a valid identifier",
@@ -112,14 +122,22 @@ export default function StockTracking() {
       setSelectedProduct(product);
       setIsLoadingInventory(true);
       
-      const data = await fetchInventory(product.slug);
+      console.log(`Checking inventory for product: ${product.styleNumber || product.code} - ${product.name}`);
+      
+      const data = await fetchInventory(product.styleNumber);
+      console.log('WebServicePort inventory response:', data);
       setInventoryData(data);
       
-      if (data.error || data.rows.length === 0) {
+      if (data.error || !data.rows || data.rows.length === 0) {
         toast({
           title: "Inventory check failed",
           description: data.message || "No inventory data available",
           variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Inventory data loaded",
+          description: `Found ${data.rows.length} inventory items for ${product.styleNumber || product.code}`,
         });
       }
     } catch (error) {
@@ -164,7 +182,7 @@ export default function StockTracking() {
       const data = await fetchSanMarInventory(styleNumber);
       setInventoryData(data);
 
-      if (data.error || data.rows.length === 0) {
+      if (data.error || !data.rows || data.rows.length === 0) {
         toast({
           title: "Inventory check failed",
           description: data.message || "No inventory data available for this style number",
@@ -267,13 +285,34 @@ export default function StockTracking() {
                           onChange={(e) => setStyleNumber(e.target.value)}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                              checkInventoryByStyle();
+                              if (styleNumber.trim()) {
+                                // Navigate to RawInventoryDetailPage on Enter key
+                                navigate(`/raw-inventory-detail?productId=${encodeURIComponent(styleNumber)}&productName=Style ${encodeURIComponent(styleNumber)}&color=`);
+                              } else {
+                                toast({
+                                  title: "Style number required",
+                                  description: "Please enter a valid style number",
+                                  variant: "destructive",
+                                });
+                              }
                             }
                           }}
                         />
                       </div>
                       <Button 
-                        onClick={checkInventoryByStyle} 
+                        onClick={() => {
+                          if (!styleNumber.trim()) {
+                            toast({
+                              title: "Style number required",
+                              description: "Please enter a valid style number",
+                              variant: "destructive",
+                            });
+                            return;
+                          }
+                          
+                          // Navigate to the RawInventoryDetailPage with style number as URL param
+                          navigate(`/raw-inventory-detail?productId=${encodeURIComponent(styleNumber)}&productName=Style ${encodeURIComponent(styleNumber)}&color=`);
+                        }} 
                         disabled={isLoadingInventory || !styleNumber.trim()} 
                         className="flex items-center gap-2"
                       >
@@ -324,21 +363,27 @@ export default function StockTracking() {
                             )}
                             <CardContent className="p-3 flex-1 flex flex-col">
                               <div className="flex-1">
-                                <h4 className="font-medium line-clamp-2">{result.name}</h4>
+                                <h4 className="font-medium line-clamp-2">{toPlainText(result.name)}</h4>
                                 {result.code && (
                                   <p className="text-xs text-muted-foreground mt-1">Style: {result.styleNumber || result.code}</p>
                                 )}
                                 {result.priceText && <p className="text-sm font-medium mt-2">{result.priceText}</p>}
-                              </div>
+                              </div>  
                               <div className="mt-3 space-y-2">
                                 <Button 
                                   variant="default" 
                                   size="sm" 
                                   className="w-full flex items-center gap-1"
-                                  onClick={() => checkInventory(result)}
-                                  disabled={isLoadingInventory && selectedProduct?.slug === result.slug}
+                                  onClick={() => {
+                                    // Navigate to the RawInventoryDetailPage with product details as URL params
+                                    const productId = result.styleNumber || result.code || '';
+                                    const productName = toPlainText(result.name) || '';
+                                    const color = '';
+                                    navigate(`/raw-inventory-detail?productId=${encodeURIComponent(productId)}&productName=${encodeURIComponent(productName)}&color=${encodeURIComponent(color)}`);
+                                  }}
+                                  disabled={isLoadingInventory && selectedProduct?.styleNumber === result.styleNumber}
                                 >
-                                  {isLoadingInventory && selectedProduct?.slug === result.slug ? (
+                                  {isLoadingInventory && selectedProduct?.styleNumber === result.styleNumber ? (
                                     <>
                                       <Loader2 className="h-3 w-3 animate-spin" />
                                       Checking...
@@ -366,8 +411,8 @@ export default function StockTracking() {
 
                     {selectedProduct && inventoryData && (
                       <div className="mt-6">
-                        <InventoryDisplay 
-                          data={inventoryData} 
+                        <RawInventoryDisplay 
+                          soapResponse={inventoryData} 
                           isLoading={isLoadingInventory}
                           productName={`${selectedProduct.styleNumber || selectedProduct.code} - ${selectedProduct.name}`}
                         />
