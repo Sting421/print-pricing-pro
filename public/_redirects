@@ -1,1 +1,4 @@
+# Don't redirect API requests to index.html
+/api/*  /api/:splat  200
+# Send all other routes to the single-page application
 /*    /index.html   200

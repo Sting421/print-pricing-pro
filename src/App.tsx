@@ -13,6 +13,10 @@ import SignCalculator from "./pages/SignCalculator";
 import StorePricing from "./pages/StorePricing";
 import NotFound from "./pages/NotFound";
 import PatchesCalculator from "./pages/PatchesCalculator";
+import StockTracking from "./pages/StockTracking";
+import TestInventory from "./pages/TestInventory";
+import InventoryChecker from "./pages/InventoryChecker";
+import RawInventoryDetailPage from "./pages/RawInventoryDetailPage";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +43,10 @@ const App = () => (
             <Route path="/signs" element={<SignCalculator />} />
             <Route path="/store-pricing" element={<StorePricing />} />
             <Route path="/patches" element={<PatchesCalculator />} />
+            <Route path="/stock" element={<StockTracking />} />
+            <Route path="/test-inventory" element={<TestInventory />} />
+            <Route path="/inventory-checker" element={<InventoryChecker />} />
+            <Route path="/raw-inventory-detail" element={<RawInventoryDetailPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

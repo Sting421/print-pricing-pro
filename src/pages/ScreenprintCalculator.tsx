@@ -1,13 +1,91 @@
 import { useState } from "react";
-import { Palette } from "lucide-react";
+import { Palette, Search, Loader2, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { CalculatorCard } from "@/components/CalculatorCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { searchSanMarProducts, SanMarProduct } from "@/lib/sanmar-api";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function ScreenprintCalculator() {
+  const { toast } = useToast();
+  const [sanmarQuery, setSanmarQuery] = useState("");
+  const [sanmarResults, setSanmarResults] = useState<SanMarProduct[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalResults, setTotalResults] = useState(0);
+  const [pageSize, setPageSize] = useState(24);
+  const [sortOption, setSortOption] = useState("relevance");
+  
+  const searchSanMar = async (page = currentPage) => {
+    if (!sanmarQuery.trim()) {
+      toast({
+        title: "Search query required",
+        description: "Please enter a search term",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      setIsSearching(true);
+      
+      const { products, pagination } = await searchSanMarProducts(
+        sanmarQuery,
+        page,
+        pageSize,
+        sortOption
+      );
+      
+      setSanmarResults(products);
+      
+      if (pagination) {
+        setCurrentPage(pagination.currentPage);
+        setTotalPages(pagination.totalPages);
+        setTotalResults(pagination.totalResults);
+      }
+      
+      toast({
+        title: "Search completed",
+        description: `Found ${products.length} items${pagination ? ` (${pagination.totalResults} total)` : ''}`
+      });
+    } catch (error) {
+      console.error("Error searching SanMar:", error);
+      toast({
+        title: "Search failed",
+        description: error instanceof Error ? error.message : "An unknown error occurred",
+        variant: "destructive"
+      });
+      
+      // Fallback to direct link if API fails
+      const encodedQuery = encodeURIComponent(sanmarQuery);
+      setSanmarResults([{
+        slug: "",
+        code: "",
+        styleNumber: "",
+        name: `Search results for "${sanmarQuery}"`,
+        priceText: "",
+        imageUrl: undefined,
+        url: `https://www.sanmar.com/search/?text=${encodedQuery}`
+      }]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+  
+  const handlePageChange = (page: number) => {
+    searchSanMar(page);
+  };
+  
+  const handleSortChange = (value: string) => {
+    setSortOption(value);
+    searchSanMar(0); // Reset to first page when sort changes
+  };
+
   const [frecklesSupplied, setFrecklesSupplied] = useState({
     shirts: 0,
     dozenCost: 0,
@@ -629,6 +707,174 @@ export default function ScreenprintCalculator() {
                   ))}
                 </div>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="text-xl font-bold">SanMar Product Search</CardTitle>
+            <CardDescription>Search for available items on SanMar</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <div className="flex-1">
+                  <Input
+                    placeholder="Search for products (e.g., t-shirt, polo, hoodie)"
+                    value={sanmarQuery}
+                    onChange={(e) => setSanmarQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        searchSanMar(0);
+                      }
+                    }}
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Select
+                    value={sortOption}
+                    onValueChange={handleSortChange}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="relevance">Relevance</SelectItem>
+                      <SelectItem value="price-low-high">Price: Low to High</SelectItem>
+                      <SelectItem value="price-high-low">Price: High to Low</SelectItem>
+                      <SelectItem value="name-asc">Name: A to Z</SelectItem>
+                      <SelectItem value="name-desc">Name: Z to A</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button 
+                    onClick={() => searchSanMar(0)}
+                    disabled={isSearching || !sanmarQuery.trim()}
+                    className="flex items-center gap-2"
+                  >
+                    {isSearching ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Searching...
+                      </>
+                    ) : (
+                      <>
+                        <Search className="h-4 w-4" />
+                        Search
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              {sanmarResults.length > 0 && (
+                <div className="mt-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-medium">Search Results</h3>
+                    {totalResults > 0 && (
+                      <p className="text-sm text-muted-foreground">
+                        Showing {sanmarResults.length} of {totalResults} items
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {sanmarResults.map((result, index) => {
+                      // Find the best image to display
+                      let imageToDisplay = '';
+                      
+                      // First try to find a thumbnail image from the images array
+                      if (result.images && result.images.length > 0) {
+                        // Look for thumbnail format first
+                        const thumbnailImage = result.images.find(img => img.format === 'thumbnail' && img.url);
+                        // If no thumbnail, look for any image with a URL
+                        const anyImage = result.images.find(img => img.url);
+                        imageToDisplay = thumbnailImage?.url || anyImage?.url || '';
+                      }
+                      
+                      // Fallback to imageUrl if no images array or no valid images found
+                      imageToDisplay = imageToDisplay || result.imageUrl || '';
+                      
+                      return (
+                        <Card key={index} className="overflow-hidden flex flex-col">
+                          {imageToDisplay && (
+                            <div className="relative h-40 overflow-hidden bg-muted">
+                              <img 
+                                src={imageToDisplay} 
+                                alt={result.name} 
+                                className="w-full h-full object-contain"
+                              />
+                              {result.priceText && (
+                                <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs font-semibold px-2 py-1 rounded">
+                                  {result.priceText}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          <CardContent className="p-3 flex-1 flex flex-col">
+                            <div className="flex-1">
+                              <h4 className="font-medium line-clamp-2">{result.name}</h4>
+                              {result.code && (
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  Style: {result.styleNumber || result.code}
+                                </p>
+                              )}
+                              {result.priceText && (
+                                <p className="text-sm font-medium mt-2">{result.priceText}</p>
+                              )}
+                            </div>
+                            <div className="mt-3">
+                              <Button 
+                                asChild 
+                                variant="outline" 
+                                size="sm" 
+                                className="w-full flex items-center gap-1"
+                              >
+                                <a 
+                                  href={result.url || `https://www.sanmar.com/p/${result.slug}`} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                >
+                                  <ExternalLink className="h-3 w-3" />
+                                  View on SanMar
+                                </a>
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                  
+                  {totalPages > 1 && (
+                    <div className="flex items-center justify-center gap-2 mt-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(Math.max(0, currentPage - 1))}
+                        disabled={currentPage === 0 || isSearching}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                        Previous
+                      </Button>
+                      
+                      <div className="text-sm">
+                        Page {currentPage + 1} of {totalPages}
+                      </div>
+                      
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(Math.min(totalPages - 1, currentPage + 1))}
+                        disabled={currentPage >= totalPages - 1 || isSearching}
+                      >
+                        Next
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

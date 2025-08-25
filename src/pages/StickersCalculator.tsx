@@ -6,6 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 
+// Format a number to at most 2 decimal places (trim trailing zeros)
+const fmt2 = (n: number) => {
+  const s = n.toFixed(2);
+  return s.replace(/\.00$/, '').replace(/(\.\d)0$/, '$1');
+};
+
 export default function StickersCalculator() {
   const [formData, setFormData] = useState({
     height: 0,
@@ -24,16 +30,16 @@ export default function StickersCalculator() {
     if (height <= 0 || width <= 0 || quantity <= 0 || width > 46) {
       return {
         horizontalMax: 0,
-        materialLength: "0.00",
-        materialCost: "0.00",
-        setupFee: "0.00",
-        totalCostWithoutLamination: "0.00",
-        pricePerStickerWithoutLamination: "0.00",
-        pricePerStickerWithLamination: "0.00",
-        cuttingCost: "0.00",
-        weedingCost: "0.00",
-        finalTotalCost: "0.00",
-        finalPricePerSticker: "0.00"
+        materialLength: "0",
+        materialCost: "0",
+        setupFee: "0",
+        totalCostWithoutLamination: "0",
+        pricePerStickerWithoutLamination: "0",
+        pricePerStickerWithLamination: "0",
+        cuttingCost: "0",
+        weedingCost: "0",
+        finalTotalCost: "0",
+        finalPricePerSticker: "0"
       };
     }
 
@@ -59,17 +65,17 @@ export default function StickersCalculator() {
     const finalTotalCost = finalPricePerSticker * quantity;
 
     return {
-      horizontalMax: horizontalMax.toFixed(3),
-      materialLength: materialLength.toFixed(3),
-      materialCost: materialCost.toFixed(3),
-      setupFee: setupFee.toFixed(2),
-      totalCostWithoutLamination: totalCostWithoutLamination.toFixed(3),
-      pricePerStickerWithoutLamination: pricePerStickerWithoutLamination.toFixed(3),
-      pricePerStickerWithLamination: pricePerStickerWithLamination.toFixed(3),
-      cuttingCost: cuttingCost.toFixed(2),
-      weedingCost: weedingCost.toFixed(2),
-      finalTotalCost: finalTotalCost.toFixed(2),
-      finalPricePerSticker: finalPricePerSticker.toFixed(2)
+      horizontalMax: fmt2(horizontalMax),
+      materialLength: fmt2(materialLength),
+      materialCost: fmt2(materialCost),
+      setupFee: fmt2(setupFee),
+      totalCostWithoutLamination: fmt2(totalCostWithoutLamination),
+      pricePerStickerWithoutLamination: fmt2(pricePerStickerWithoutLamination),
+      pricePerStickerWithLamination: fmt2(pricePerStickerWithLamination),
+      cuttingCost: fmt2(cuttingCost),
+      weedingCost: fmt2(weedingCost),
+      finalTotalCost: fmt2(finalTotalCost),
+      finalPricePerSticker: fmt2(finalPricePerSticker)
     };
   };
 
