@@ -97,7 +97,7 @@ export async function findProducts(
   sort: string = "relevance"
 ): Promise<SanMarSearchResponse> {
   // Use our proxy server instead of direct API call
-  const url = "/api/search";
+  const url = `${import.meta.env.VITE_ENDPOINT}/api/search`;
   const body = {
     query,
     page,

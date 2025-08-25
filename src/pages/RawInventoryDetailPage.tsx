@@ -45,7 +45,7 @@ export default function RawInventoryDetailPage() {
         
         // Directly use the inventory-api.ts:349 implementation (PromoStandards SOAP API)
         // instead of fetchSanMarInventory which includes fallbacks
-        let url = `/api/sanmar-soap-inventory/${productId}`;
+        let url = `${import.meta.env.VITE_ENDPOINT}/api/sanmar-soap-inventory/${productId}`;
         
         // Add optional parameters if provided
         const params = new URLSearchParams();
