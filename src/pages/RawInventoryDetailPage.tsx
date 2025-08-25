@@ -54,13 +54,25 @@ export default function RawInventoryDetailPage() {
         const queryString = params.toString();
         if (queryString) url += `?${queryString}`;
         
-        const soapResponse = await fetch(url);
+        console.log(`Fetching inventory from: ${url}`);
+        const soapResponse = await fetch(url, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
         
         if (!soapResponse.ok) {
+          // Check if we got HTML instead of JSON
+          const contentType = soapResponse.headers.get('content-type');
+          if (contentType && contentType.includes('text/html')) {
+            throw new Error('Received HTML instead of JSON. API endpoint misconfiguration detected.');
+          }
           throw new Error(`Failed to fetch inventory data: ${soapResponse.statusText}`);
         }
         
         const data = await soapResponse.json();
+        console.log('API response:', data);
         setInventoryData(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load inventory data');

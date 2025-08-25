@@ -10,6 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "node server.cjs",
+    "server:prod": "node server-production.js",
+    "prod": "npm run build && npm run server:prod",
     "dev:all": "concurrently \"npm run dev\" \"npm run server\""
   },
   "dependencies": {
