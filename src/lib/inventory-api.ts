@@ -336,7 +336,7 @@ export async function fetchSanMarInventory(
     
     // Try PromoStandards SOAP API as first fallback
     try {
-      let url = `http://localhost:8080/api/sanmar-soap-inventory/${styleNumber}`;
+      let url = `/api/sanmar-soap-inventory/${styleNumber}`;
       
       // Add optional parameters if provided
       const params = new URLSearchParams();
